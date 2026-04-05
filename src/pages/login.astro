@@ -1,0 +1,16 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { APP_NAME } from "@/lib/constants";
+
+export const prerender = true;
+---
+
+<Layout title="Login">
+  <div style="max-width: 400px; margin: 0 auto; padding: 128px 24px; text-align: center;">
+    <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 8px;">Sign in to {APP_NAME}</h1>
+    <p style="color: #71717a; margin-bottom: 32px;">Continue with your Whop account</p>
+    <a href="/api/auth/login" style="display: inline-block; background: #18181b; color: white; padding: 12px 32px; border-radius: 8px; font-weight: 500; text-decoration: none;">
+      Sign in with Whop
+    </a>
+  </div>
+</Layout>

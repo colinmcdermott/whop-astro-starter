@@ -1,0 +1,33 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { APP_NAME, PLAN_METADATA } from "@/lib/constants";
+
+export const prerender = true;
+---
+
+<Layout title="Home">
+  <div style="max-width: 800px; margin: 0 auto; padding: 64px 24px; text-align: center;">
+    <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 16px;">{APP_NAME}</h1>
+    <p style="font-size: 20px; color: #71717a; margin-bottom: 48px;">
+      Built with Astro and <a href="https://www.npmjs.com/package/whop-kit">whop-kit</a>
+    </p>
+
+    <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px;">
+      {Object.entries(PLAN_METADATA).map(([_key, plan]) => (
+        <div style={`border: 1px solid ${plan.highlighted ? '#2563eb' : '#e4e4e7'}; border-radius: 12px; padding: 32px; width: 280px; background: white; text-align: left;`}>
+          <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">{plan.name}</h3>
+          <p style="font-size: 14px; color: #71717a; margin-bottom: 16px;">{plan.description}</p>
+          <ul style="list-style: none; padding: 0;">
+            {plan.features.map((f) => (
+              <li style="font-size: 14px; padding: 4px 0; color: #3f3f46;">✓ {f}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <a href="/api/auth/login" style="display: inline-block; background: #18181b; color: white; padding: 12px 32px; border-radius: 8px; font-weight: 500; text-decoration: none;">
+      Sign in with Whop
+    </a>
+  </div>
+</Layout>
