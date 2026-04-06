@@ -14,9 +14,11 @@
     "@astrojs/node": "^9.2.2",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
+    "@tailwindcss/postcss": "^4.2.2",
     "astro": "^5.8.4",
     "jose": "^6.2.2",
     "pg": "^8.20.0",
+    "tailwindcss": "^4.2.2",
     "whop-kit": "^0.1.2"
   },
   "devDependencies": {

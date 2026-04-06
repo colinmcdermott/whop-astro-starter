@@ -1,0 +1,25 @@
+---
+const features = [
+  { title: "Authentication", description: "OAuth 2.1 + PKCE via Whop. No client secret needed.", icon: "🔐" },
+  { title: "Payments", description: "Embedded checkout with monthly and yearly billing.", icon: "💳" },
+  { title: "Plan Gating", description: "Gate pages, API routes, and UI elements by subscription tier.", icon: "🔒" },
+  { title: "Dashboard", description: "Protected area with plan-aware features and admin settings.", icon: "📊" },
+  { title: "Webhooks", description: "Real-time subscription and payment event handling.", icon: "🔔" },
+  { title: "Email", description: "Transactional email via Resend or SendGrid.", icon: "📧" },
+];
+---
+
+<section class="py-24 px-6 border-t border-[var(--border)]">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-12">Everything you need</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {features.map((f) => (
+        <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
+          <div class="text-2xl mb-3">{f.icon}</div>
+          <h3 class="font-semibold mb-2">{f.title}</h3>
+          <p class="text-sm text-[var(--muted)] leading-relaxed">{f.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

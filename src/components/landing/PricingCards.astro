@@ -1,0 +1,51 @@
+---
+import { PLAN_METADATA } from "@/lib/constants";
+import type { PlanMetadataEntry } from "@/lib/constants";
+
+const plans = Object.entries(PLAN_METADATA) as [string, PlanMetadataEntry][];
+---
+
+<section class="py-24 px-6 border-t border-[var(--border)]">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-4">Simple pricing</h2>
+    <p class="text-center text-[var(--muted)] mb-12">Choose the plan that works for you</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      {plans.map(([key, plan]) => (
+        <div class:list={[
+          "rounded-xl border p-6 flex flex-col",
+          plan.highlighted
+            ? "border-[var(--accent)] bg-[var(--card)] shadow-lg scale-105"
+            : "border-[var(--border)] bg-[var(--card)]",
+        ]}>
+          <h3 class="text-xl font-semibold mb-2">{plan.name}</h3>
+          <p class="text-sm text-[var(--muted)] mb-4">{plan.description}</p>
+          <div class="mb-6">
+            <span class="text-3xl font-bold">
+              {plan.priceMonthly === 0 ? "Free" : `$${plan.priceMonthly}`}
+            </span>
+            {plan.priceMonthly > 0 && <span class="text-[var(--muted)]">/mo</span>}
+          </div>
+          <ul class="space-y-2 mb-6 flex-1">
+            {plan.features.map((f) => (
+              <li class="text-sm flex items-start gap-2">
+                <span class="text-green-500 mt-0.5">✓</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={key === "free" ? "/api/auth/login" : "/api/auth/login"}
+            class:list={[
+              "block text-center py-2.5 rounded-lg font-medium transition-opacity hover:opacity-90",
+              plan.highlighted
+                ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+                : "bg-[var(--foreground)] text-[var(--background)]",
+            ]}
+          >
+            {key === "free" ? "Get Started" : "Subscribe"}
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

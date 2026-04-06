@@ -11,36 +11,38 @@ if (!session) {
 ---
 
 <Layout title="Dashboard">
-  <div style="max-width: 800px; margin: 0 auto; padding: 48px 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px;">
-      <h1 style="font-size: 24px; font-weight: 600;">Dashboard</h1>
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <span style="font-size: 14px; color: #71717a;">{session.email}</span>
-        <a href="/api/auth/logout" style="font-size: 14px; color: #ef4444; text-decoration: none;">Sign out</a>
+  <div class="max-w-4xl mx-auto px-6 py-12">
+    <div class="flex items-center justify-between mb-10">
+      <h1 class="text-2xl font-semibold">Dashboard</h1>
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-[var(--muted)]">{session.email}</span>
+        <a href="/api/auth/logout" class="text-sm text-red-500 hover:text-red-600 transition-colors">
+          Sign out
+        </a>
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-      <div style="background: white; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px;">
-        <p style="font-size: 12px; color: #71717a; text-transform: uppercase; margin-bottom: 4px;">Plan</p>
-        <p style="font-size: 24px; font-weight: 600; text-transform: capitalize;">{session.plan}</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+        <p class="text-xs uppercase text-[var(--muted)] mb-1">Plan</p>
+        <p class="text-2xl font-semibold capitalize">{session.plan}</p>
       </div>
-      <div style="background: white; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px;">
-        <p style="font-size: 12px; color: #71717a; text-transform: uppercase; margin-bottom: 4px;">Name</p>
-        <p style="font-size: 24px; font-weight: 600;">{session.name || "—"}</p>
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+        <p class="text-xs uppercase text-[var(--muted)] mb-1">Name</p>
+        <p class="text-2xl font-semibold">{session.name || "—"}</p>
       </div>
-      <div style="background: white; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px;">
-        <p style="font-size: 12px; color: #71717a; text-transform: uppercase; margin-bottom: 4px;">Role</p>
-        <p style="font-size: 24px; font-weight: 600;">{session.isAdmin ? "Admin" : "Member"}</p>
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+        <p class="text-xs uppercase text-[var(--muted)] mb-1">Role</p>
+        <p class="text-2xl font-semibold">{session.isAdmin ? "Admin" : "Member"}</p>
       </div>
     </div>
 
-    <div style="background: white; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px;">
-      <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Your app goes here</h2>
-      <p style="font-size: 14px; color: #71717a; line-height: 1.6;">
-        This template uses <a href="https://www.npmjs.com/package/whop-kit">whop-kit</a> for authentication,
-        session management, and subscription handling — the same library as the Next.js starter.
-        Build your Astro app on top of it.
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+      <h2 class="font-semibold mb-3">Start building</h2>
+      <p class="text-sm text-[var(--muted)] leading-relaxed">
+        This template uses <a href="https://www.npmjs.com/package/whop-kit" class="text-[var(--accent)] hover:underline">whop-kit</a> for
+        authentication, session management, and subscription handling — the same library as the Next.js starter.
+        Built with Astro for a content-first, fast-by-default experience.
       </p>
     </div>
   </div>

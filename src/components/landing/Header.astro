@@ -1,0 +1,15 @@
+---
+import { APP_NAME } from "@/lib/constants";
+---
+
+<header class="sticky top-0 z-50 bg-[var(--background)]/80 backdrop-blur-sm border-b border-[var(--border)]">
+  <div class="max-w-5xl mx-auto flex items-center justify-between px-6 h-16">
+    <a href="/" class="font-semibold text-lg">{APP_NAME}</a>
+    <nav class="flex items-center gap-6">
+      <a href="/pricing" class="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">Pricing</a>
+      <a href="/api/auth/login" class="text-sm bg-[var(--foreground)] text-[var(--background)] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+        Sign in
+      </a>
+    </nav>
+  </div>
+</header>

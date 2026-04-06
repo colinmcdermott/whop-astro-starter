@@ -1,0 +1,13 @@
+---
+import { APP_NAME } from "@/lib/constants";
+---
+
+<footer class="py-8 px-6 border-t border-[var(--border)]">
+  <div class="max-w-5xl mx-auto flex items-center justify-between text-sm text-[var(--muted)]">
+    <span>&copy; {new Date().getFullYear()} {APP_NAME}</span>
+    <nav class="flex gap-4">
+      <a href="/terms" class="hover:text-[var(--foreground)] transition-colors">Terms</a>
+      <a href="/privacy" class="hover:text-[var(--foreground)] transition-colors">Privacy</a>
+    </nav>
+  </div>
+</footer>

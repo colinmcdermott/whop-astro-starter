@@ -1,12 +1,15 @@
 ---
+import "../styles/globals.css";
 import { APP_NAME } from "@/lib/constants";
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 const pageTitle = title ? `${title} — ${APP_NAME}` : APP_NAME;
+const pageDescription = description || "A modern SaaS starter built with Astro and Whop";
 ---
 
 <!doctype html>
@@ -15,14 +18,10 @@ const pageTitle = title ? `${title} — ${APP_NAME}` : APP_NAME;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #18181b; background: #fafafa; }
-      a { color: #2563eb; text-decoration: none; }
-      a:hover { text-decoration: underline; }
-    </style>
+    <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body>
+  <body class="bg-[var(--background)] text-[var(--foreground)]">
     <slot />
   </body>
 </html>

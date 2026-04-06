@@ -2,6 +2,7 @@ import { definePlans } from "whop-kit/core";
 export type { BillingInterval, PlanMetadataEntry } from "whop-kit/core";
 
 export const APP_NAME = "Whop Astro Starter";
+export const APP_DESCRIPTION = "A modern SaaS starter built with Astro and Whop";
 
 export const plans = definePlans({
   free: {
