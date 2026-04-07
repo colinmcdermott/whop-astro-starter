@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "prisma generate && astro build",
+    "build": "prisma generate && node scripts/db-push.mjs && astro build",
     "preview": "astro preview",
     "db:generate": "prisma generate",
     "db:push": "prisma db push"
