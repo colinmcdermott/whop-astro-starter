@@ -14,9 +14,17 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
     </nav>
 
     <div class="hidden items-center gap-1 sm:flex">
-      <a href="/api/auth/login" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Sign in</a>
+      <!-- Signed-out state (default) -->
+      <div id="header-signed-out">
+        <a href="/api/auth/login" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Sign in</a>
+      </div>
+      <!-- Signed-in state (shown via JS) -->
+      <div id="header-signed-in" class="hidden items-center gap-2">
+        <a href="/dashboard" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Dashboard</a>
+      </div>
       <ThemeToggle />
-      <a href="/pricing" class="ml-2 rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
+      <!-- CTA swaps between Get Started / Dashboard -->
+      <a id="header-cta" href="/pricing" class="ml-2 rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
         Get Started
       </a>
     </div>
@@ -24,9 +32,26 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
     <!-- Mobile -->
     <div class="ml-auto flex items-center gap-1 sm:hidden">
       <ThemeToggle />
-      <a href="/api/auth/login" class="ml-1 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
+      <a id="header-mobile-cta" href="/api/auth/login" class="ml-1 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
         Sign in
       </a>
     </div>
   </div>
 </header>
+
+<script>
+  fetch("/api/auth/me", { credentials: "same-origin" })
+    .then((r) => r.ok ? r.json() : null)
+    .then((user) => {
+      if (!user?.authenticated) return;
+      const out = document.getElementById("header-signed-out");
+      const inn = document.getElementById("header-signed-in");
+      const cta = document.getElementById("header-cta") as HTMLAnchorElement | null;
+      const mob = document.getElementById("header-mobile-cta") as HTMLAnchorElement | null;
+      if (out) out.classList.add("hidden");
+      if (inn) { inn.classList.remove("hidden"); inn.classList.add("flex"); }
+      if (cta) { cta.href = "/dashboard"; cta.textContent = "Dashboard"; }
+      if (mob) { mob.href = "/dashboard"; mob.textContent = "Dashboard"; }
+    })
+    .catch(() => {});
+</script>
