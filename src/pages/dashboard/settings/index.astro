@@ -1,0 +1,177 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import { getSession } from "@/lib/auth";
+import { getPlansConfig } from "@/lib/config";
+import { DEFAULT_PLAN } from "@/lib/constants";
+
+export const prerender = false;
+
+const session = await getSession(Astro.cookies);
+if (!session) {
+  return Astro.redirect("/login");
+}
+
+const plans = getPlansConfig();
+const planConfig = plans[session.plan] ?? plans[DEFAULT_PLAN];
+---
+
+<DashboardLayout title="Settings" session={session}>
+  <div class="mx-auto max-w-4xl space-y-6">
+    <div class="animate-slide-up">
+      <h1 class="text-lg font-semibold tracking-tight">Settings</h1>
+      <p class="mt-0.5 text-sm text-[var(--muted)]">Manage your account.</p>
+    </div>
+
+    <!-- Profile -->
+    <section class="animate-slide-up delay-100 rounded-xl border border-[var(--border)] bg-[var(--card)] p-5">
+      <h2 class="text-sm font-semibold">Profile</h2>
+      <div class="mt-4 space-y-3">
+        <div class="flex items-start justify-between">
+          <span class="text-xs text-[var(--muted)]">Name</span>
+          <span class="text-sm font-medium text-right max-w-[60%]">{session.name ?? "\u2014"}</span>
+        </div>
+        <div class="flex items-start justify-between">
+          <span class="text-xs text-[var(--muted)]">Email</span>
+          <span class="text-sm font-medium text-right max-w-[60%]">{session.email ?? "\u2014"}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subscription -->
+    <section class="animate-slide-up delay-200 rounded-xl border border-[var(--border)] bg-[var(--card)] p-5">
+      <h2 class="text-sm font-semibold">Subscription</h2>
+      <div class="mt-4 space-y-3">
+        <div class="flex items-start justify-between">
+          <span class="text-xs text-[var(--muted)]">Current plan</span>
+          <span class="text-sm font-medium">{planConfig.name}</span>
+        </div>
+        <div class="flex items-start justify-between">
+          <span class="text-xs text-[var(--muted)]">Features</span>
+          <span class="text-sm font-medium text-right max-w-[60%]">{planConfig.features.slice(0, 3).join(", ")}</span>
+        </div>
+      </div>
+
+      <div class="mt-5 flex items-center gap-3">
+        {session.plan === DEFAULT_PLAN ? (
+          <a
+            href="/pricing"
+            class="rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-xs font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80"
+          >
+            Upgrade Plan
+          </a>
+        ) : session.cancelAtPeriodEnd ? (
+          <button
+            id="reactivate-btn"
+            class="rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-xs font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80"
+          >
+            Reactivate Subscription
+          </button>
+        ) : (
+          <a
+            href="/pricing"
+            class="rounded-lg border border-[var(--border)] px-3.5 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--surface)]"
+          >
+            Change Plan
+          </a>
+        )}
+      </div>
+    </section>
+
+    <!-- Danger Zone -->
+    <section class="animate-slide-up delay-300 rounded-xl border border-red-200 dark:border-red-900/30 bg-[var(--card)] p-5">
+      <h2 class="text-sm font-semibold text-red-600 dark:text-red-400">Danger Zone</h2>
+      <p class="mt-1 text-xs text-[var(--muted)]">
+        Permanently delete your account and all associated data.
+      </p>
+      <button
+        id="delete-account-btn"
+        class="mt-4 rounded-lg border border-red-200 dark:border-red-900/30 px-3.5 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-900/10"
+      >
+        Delete Account
+      </button>
+    </section>
+  </div>
+</DashboardLayout>
+
+<!-- Delete account modal -->
+<div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="w-full max-w-sm rounded-xl border border-[var(--border)] bg-[var(--background)] p-6 mx-4">
+    <h3 class="text-sm font-semibold">Delete Account</h3>
+    <p class="mt-2 text-xs text-[var(--muted)]">
+      This action is permanent and cannot be undone. Type <strong>DELETE</strong> to confirm.
+    </p>
+    <input
+      id="delete-confirm-input"
+      type="text"
+      placeholder="Type DELETE"
+      class="mt-3 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--accent)]"
+    />
+    <div class="mt-4 flex gap-2">
+      <button
+        id="delete-cancel-btn"
+        class="flex-1 rounded-lg border border-[var(--border)] px-3 py-2 text-xs font-medium transition-colors hover:bg-[var(--surface)]"
+      >
+        Cancel
+      </button>
+      <button
+        id="delete-confirm-btn"
+        disabled
+        class="flex-1 rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        Delete Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Delete account
+  const deleteBtn = document.getElementById("delete-account-btn");
+  const modal = document.getElementById("delete-modal");
+  const cancelBtn = document.getElementById("delete-cancel-btn");
+  const confirmBtn = document.getElementById("delete-confirm-btn") as HTMLButtonElement | null;
+  const input = document.getElementById("delete-confirm-input") as HTMLInputElement | null;
+
+  deleteBtn?.addEventListener("click", () => {
+    modal?.classList.remove("hidden");
+    modal?.classList.add("flex");
+    input?.focus();
+  });
+
+  cancelBtn?.addEventListener("click", () => {
+    modal?.classList.add("hidden");
+    modal?.classList.remove("flex");
+    if (input) input.value = "";
+    if (confirmBtn) confirmBtn.disabled = true;
+  });
+
+  input?.addEventListener("input", () => {
+    if (confirmBtn) confirmBtn.disabled = input.value !== "DELETE";
+  });
+
+  confirmBtn?.addEventListener("click", async () => {
+    if (confirmBtn) confirmBtn.textContent = "Deleting...";
+    const res = await fetch("/api/auth/delete-account", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ confirmation: "DELETE" }),
+    });
+    if (res.ok) {
+      window.location.href = "/";
+    } else {
+      if (confirmBtn) confirmBtn.textContent = "Failed — try again";
+    }
+  });
+
+  // Reactivate subscription
+  const reactivateBtn = document.getElementById("reactivate-btn");
+  reactivateBtn?.addEventListener("click", async () => {
+    reactivateBtn.textContent = "Reactivating...";
+    const res = await fetch("/api/billing/uncancel", { method: "POST" });
+    if (res.ok) {
+      window.location.reload();
+    } else {
+      reactivateBtn.textContent = "Failed — try again";
+    }
+  });
+</script>

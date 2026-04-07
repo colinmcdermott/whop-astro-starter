@@ -1,0 +1,22 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/landing/Header.astro";
+import Footer from "@/components/landing/Footer.astro";
+
+export const prerender = true;
+---
+
+<Layout title="Privacy Policy">
+  <div class="flex min-h-screen flex-col">
+    <Header />
+    <main id="main-content" class="flex-1">
+      <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6">
+        <h1 class="text-2xl font-semibold tracking-tight">Privacy Policy</h1>
+        <p class="mt-4 text-sm text-[var(--muted)] leading-relaxed">
+          Replace this page with your privacy policy.
+        </p>
+      </div>
+    </main>
+    <Footer />
+  </div>
+</Layout>

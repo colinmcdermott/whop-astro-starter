@@ -1,16 +1,39 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { APP_NAME } from "@/lib/constants";
+import AppLogo from "@/components/AppLogo.astro";
+import { LINKS } from "@/lib/constants";
 
 export const prerender = true;
 ---
 
-<Layout title="Login">
-  <div class="max-w-sm mx-auto px-6 py-32 text-center">
-    <h1 class="text-2xl font-semibold mb-2">Sign in to {APP_NAME}</h1>
-    <p class="text-[var(--muted)] mb-8">Continue with your Whop account</p>
-    <a href="/api/auth/login" class="inline-block bg-[var(--foreground)] text-[var(--background)] px-8 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
-      Sign in with Whop
-    </a>
+<Layout title="Sign In">
+  <div class="flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-xs animate-slide-up">
+      <div class="text-center mb-8">
+        <a href="/">
+          <AppLogo />
+        </a>
+        <p class="mt-2 text-xs text-[var(--muted)]">
+          Sign in to your account
+        </p>
+      </div>
+
+      <a
+        href="/api/auth/login"
+        class="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l7.59-7.59L20 8l-9 9z" />
+        </svg>
+        Continue with Whop
+      </a>
+
+      <p class="mt-6 text-center text-[10px] text-[var(--muted)] leading-relaxed">
+        By continuing, you agree to our
+        <a href={LINKS.terms} class="underline underline-offset-4 hover:text-[var(--foreground)]">Terms</a>
+        and
+        <a href={LINKS.privacy} class="underline underline-offset-4 hover:text-[var(--foreground)]">Privacy Policy</a>.
+      </p>
+    </div>
   </div>
 </Layout>

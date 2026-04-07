@@ -1,0 +1,78 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+export const prerender = false;
+
+const error = Astro.url.searchParams.get("error");
+const description = Astro.url.searchParams.get("description");
+
+const errorMessages: Record<string, string> = {
+  missing_config: "Whop is not configured yet. Add WHOP_APP_ID to your environment variables to enable authentication.",
+  missing_params: "The sign-in request was incomplete. Please try again.",
+  expired_session: "Your sign-in session expired. Please try again.",
+  invalid_state: "The sign-in session was invalid. Please try again.",
+  state_mismatch: "The sign-in session didn't match. Please try again.",
+  exchange_failed: "Failed to complete sign-in. Please try again.",
+  access_denied: "You denied the sign-in request.",
+  auth_failed: "Authentication failed. Please try again.",
+  missing_pkce: "Your sign-in session expired. Please try again.",
+  not_configured: "Whop is not configured yet. Please set up your environment variables.",
+};
+
+const isConfigError = error === "missing_config" || error === "not_configured";
+const message = (error && errorMessages[error]) ?? description ?? "An unexpected error occurred during sign-in.";
+---
+
+<Layout title="Authentication Error">
+  <div class="flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-sm animate-slide-up">
+      <div class="text-center">
+        <div class:list={["mx-auto mb-5 flex h-10 w-10 items-center justify-center rounded-lg", isConfigError ? "bg-amber-500/10" : "bg-red-500/10"]}>
+          {isConfigError ? (
+            <svg class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+          ) : (
+            <svg class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+          )}
+        </div>
+
+        <h1 class="text-sm font-semibold">
+          {isConfigError ? "Setup Required" : "Authentication Error"}
+        </h1>
+        <p class="mt-2 text-xs text-[var(--muted)] leading-relaxed">{message}</p>
+      </div>
+
+      {isConfigError && (
+        <div class="mt-5 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
+          <p class="text-xs font-medium mb-2">Quick setup:</p>
+          <ol class="text-xs text-[var(--muted)] space-y-1.5 list-decimal list-inside">
+            <li>Set WHOP_APP_ID in your environment variables</li>
+            <li>Create a Whop app at <a href="https://dash.whop.com" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-[var(--foreground)]">dash.whop.com</a></li>
+            <li>Add your app ID and API key</li>
+            <li>Redeploy your app</li>
+          </ol>
+        </div>
+      )}
+
+      <div class="mt-6 flex flex-col gap-2">
+        {!isConfigError && (
+          <a
+            href="/login"
+            class="rounded-lg bg-[var(--accent)] px-4 py-2 text-center text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80"
+          >
+            Try Again
+          </a>
+        )}
+        <a
+          href="/"
+          class="rounded-lg border border-[var(--border)] px-4 py-2 text-center text-sm font-medium transition-colors hover:bg-[var(--surface)]"
+        >
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

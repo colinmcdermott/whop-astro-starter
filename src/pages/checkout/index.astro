@@ -1,0 +1,98 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AppLogo from "@/components/AppLogo.astro";
+import { getSession } from "@/lib/auth";
+import { getPlansConfig } from "@/lib/config";
+import { PLAN_KEYS, type PlanKey, type BillingInterval } from "@/lib/constants";
+
+export const prerender = false;
+
+const planParam = Astro.url.searchParams.get("plan");
+const intervalParam = Astro.url.searchParams.get("interval");
+
+const planKey: PlanKey | null =
+  planParam && PLAN_KEYS.includes(planParam as PlanKey) ? (planParam as PlanKey) : null;
+const interval: BillingInterval = intervalParam === "monthly" ? "monthly" : "yearly";
+
+const [plans, session] = await Promise.all([getPlansConfig(), getSession(Astro.cookies)]);
+
+const plan = planKey ? (plans[planKey] ?? null) : null;
+const whopPlanId = plan
+  ? interval === "yearly" ? plan.whopPlanIdYearly : plan.whopPlanId
+  : "";
+
+const isValid = !!(plan && whopPlanId && planKey);
+const userEmail = session?.email ?? null;
+---
+
+<Layout title="Checkout">
+  <div class="flex min-h-screen flex-col">
+    <header class="border-b border-[var(--border)] px-4 py-3">
+      <a href="/"><AppLogo /></a>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center px-4 py-12">
+      {!isValid ? (
+        <div class="w-full max-w-xs text-center">
+          <h1 class="text-sm font-semibold">Invalid Plan</h1>
+          <p class="mt-2 text-xs text-[var(--muted)]">
+            The plan you selected doesn't exist or hasn't been configured.
+          </p>
+          <a
+            href="/pricing"
+            class="mt-6 inline-block rounded-lg border border-[var(--border)] px-5 py-2 text-sm font-medium transition-colors hover:bg-[var(--surface)]"
+          >
+            Back to Pricing
+          </a>
+        </div>
+      ) : (
+        <div class="w-full max-w-md">
+          <div class="text-center mb-8">
+            <h1 class="text-lg font-semibold">Subscribe to {plan.name}</h1>
+            <p class="mt-1 text-sm text-[var(--muted)]">
+              {plan.priceMonthly > 0 || plan.priceYearly > 0 ? (
+                interval === "yearly" && plan.priceYearly > 0
+                  ? `$${plan.priceYearly}/year`
+                  : `$${plan.priceMonthly}/month`
+              ) : (
+                "Complete your subscription"
+              )}
+            </p>
+          </div>
+
+          <!-- Whop Checkout Embed Container -->
+          <div
+            id="whop-checkout"
+            data-plan-id={whopPlanId}
+            data-email={userEmail ?? ""}
+            class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 min-h-[300px] flex items-center justify-center"
+          >
+            <div class="text-center">
+              <div class="animate-spin h-5 w-5 border-2 border-[var(--accent)] border-t-transparent rounded-full mx-auto mb-3"></div>
+              <p class="text-xs text-[var(--muted)]">Loading checkout...</p>
+            </div>
+          </div>
+
+          <p class="mt-4 text-center text-[10px] text-[var(--muted)]">
+            Payments are processed securely by <a href="https://whop.com" class="underline underline-offset-4 hover:text-[var(--foreground)]" target="_blank" rel="noopener noreferrer">Whop</a>.
+          </p>
+        </div>
+      )}
+    </main>
+  </div>
+</Layout>
+
+<script>
+  // Load Whop checkout embed
+  const container = document.getElementById("whop-checkout");
+  if (container) {
+    const planId = container.dataset.planId;
+    const email = container.dataset.email;
+    if (planId) {
+      // Redirect to Whop's hosted checkout
+      const params = new URLSearchParams({ plan: planId });
+      if (email) params.set("email", email);
+      window.location.href = `https://whop.com/checkout/${planId}`;
+    }
+  }
+</script>

@@ -76,7 +76,8 @@ const planKeys = Object.keys(plans) as PlanKey[];
           <div class="mt-5">
             {plan.whopPlanId ? (
               <a
-                href="/api/auth/login"
+                href={`/checkout?plan=${key}&interval=yearly`}
+                data-checkout-link
                 class:list={[
                   "block rounded-lg py-2.5 text-center text-sm font-medium transition-opacity",
                   highlighted
