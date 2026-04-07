@@ -13,19 +13,20 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
       <a href="/pricing" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Pricing</a>
     </nav>
 
-    <div class="hidden items-center gap-1 sm:flex">
-      <!-- Signed-out state (default) -->
-      <div id="header-signed-out">
-        <a href="/api/auth/login" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Sign in</a>
-      </div>
-      <!-- Signed-in state (shown via JS) -->
-      <div id="header-signed-in" class="hidden items-center gap-2">
-        <a href="/dashboard" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Dashboard</a>
-      </div>
+    <!-- Desktop: signed-out (default) -->
+    <div id="header-signed-out" class="hidden items-center gap-1 sm:flex">
+      <a href="/api/auth/login" class="rounded-md px-3 py-1.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">Sign in</a>
       <ThemeToggle />
-      <!-- CTA swaps between Get Started / Dashboard -->
-      <a id="header-cta" href="/pricing" class="ml-2 rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
+      <a href="/pricing" class="ml-2 rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
         Get Started
+      </a>
+    </div>
+
+    <!-- Desktop: signed-in (swapped via JS) -->
+    <div id="header-signed-in" class="hidden items-center gap-1">
+      <ThemeToggle />
+      <a href="/dashboard" class="ml-2 rounded-lg bg-[var(--accent)] px-3.5 py-1.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80">
+        Dashboard
       </a>
     </div>
 
@@ -46,11 +47,9 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
       if (!user?.authenticated) return;
       const out = document.getElementById("header-signed-out");
       const inn = document.getElementById("header-signed-in");
-      const cta = document.getElementById("header-cta") as HTMLAnchorElement | null;
       const mob = document.getElementById("header-mobile-cta") as HTMLAnchorElement | null;
       if (out) out.classList.add("hidden");
-      if (inn) { inn.classList.remove("hidden"); inn.classList.add("flex"); }
-      if (cta) { cta.href = "/dashboard"; cta.textContent = "Dashboard"; }
+      if (inn) inn.classList.add("flex");
       if (mob) { mob.href = "/dashboard"; mob.textContent = "Dashboard"; }
     })
     .catch(() => {});

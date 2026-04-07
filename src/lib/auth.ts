@@ -15,7 +15,7 @@ import type { Session as BaseSession } from "whop-kit/auth";
 import type { AstroCookies } from "astro";
 import { astroCookieAdapter } from "./adapters/astro";
 import { prisma } from "@/lib/db";
-import { PLAN_KEYS, DEFAULT_PLAN, type PlanKey } from "./constants";
+import { PLAN_KEYS, PLAN_RANK, DEFAULT_PLAN, type PlanKey } from "./constants";
 
 export interface Session extends Omit<BaseSession, "plan"> {
   plan: PlanKey;
@@ -101,4 +101,30 @@ export async function getSession(cookies: AstroCookies): Promise<Session | null>
     },
   );
   return base as Session | null;
+}
+
+// ---------------------------------------------------------------------------
+// Plan gating
+// ---------------------------------------------------------------------------
+
+/**
+ * Check if a user's plan meets or exceeds a minimum plan level.
+ * Pure function — no DB or async needed.
+ */
+export function hasMinimumPlan(userPlan: PlanKey, minimumPlan: PlanKey): boolean {
+  return (PLAN_RANK[userPlan] ?? 0) >= (PLAN_RANK[minimumPlan] ?? 0);
+}
+
+/**
+ * Require a minimum plan level. Returns session or null if insufficient.
+ * Use in Astro pages: if (!session) return Astro.redirect("/pricing");
+ */
+export async function requirePlan(
+  cookies: AstroCookies,
+  minimumPlan: PlanKey,
+): Promise<Session | null> {
+  const session = await getSession(cookies);
+  if (!session) return null;
+  if (!hasMinimumPlan(session.plan, minimumPlan)) return null;
+  return session;
 }

@@ -26,4 +26,5 @@ export const plans = definePlans({
 export const PLAN_METADATA = plans.metadata;
 export type PlanKey = keyof typeof PLAN_METADATA;
 export const PLAN_KEYS = plans.keys;
+export const PLAN_RANK = plans.ranks as Record<string, number>;
 export const DEFAULT_PLAN = plans.defaultPlan;
