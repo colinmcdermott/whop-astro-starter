@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
-    "@astrojs/node": "^9.2.2",
+    "@astrojs/vercel": "^8.1.4",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
     "@tailwindcss/postcss": "^4.2.2",
