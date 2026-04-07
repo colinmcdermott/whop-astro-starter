@@ -3,7 +3,7 @@ import { clearSessionCookie } from "@/lib/auth";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ cookies, url }) => {
+export const GET: APIRoute = async ({ cookies }) => {
   await clearSessionCookie(cookies);
-  return new Response(null, { status: 302, headers: { Location: new URL("/", url.origin).href } });
+  return new Response(null, { status: 302, headers: { Location: "/" } });
 };
