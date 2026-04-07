@@ -1,15 +1,34 @@
----
-import { APP_NAME } from "@/lib/constants";
----
+<section>
+  <div class="mx-auto max-w-5xl px-4 py-24 sm:px-6">
+    <div class="relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-16 text-center sm:px-16">
+      <!-- Subtle accent glow -->
+      <div class="pointer-events-none absolute inset-0 -z-10">
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[500px] rounded-full bg-[var(--accent)]/[0.04] blur-[100px]"></div>
+      </div>
 
-<section class="py-24 px-6 border-t border-[var(--border)]">
-  <div class="max-w-2xl mx-auto text-center">
-    <h2 class="text-3xl font-bold mb-4">Ready to get started?</h2>
-    <p class="text-[var(--muted)] mb-8">
-      Join {APP_NAME} today and start building your SaaS.
-    </p>
-    <a href="/api/auth/login" class="inline-block bg-[var(--accent)] text-[var(--accent-foreground)] px-8 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
-      Sign up free
-    </a>
+      <h2 class="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+        Ready to start building?
+      </h2>
+      <p class="mx-auto mt-3 max-w-md text-sm text-[var(--muted)] leading-relaxed">
+        Get auth, payments, and subscriptions out of the box. Launch your SaaS in minutes, not months.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href="/pricing"
+          class="group w-full rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80 sm:w-auto"
+        >
+          Get Started
+          <span class="ml-1.5 inline-block transition-transform group-hover:translate-x-0.5">&rarr;</span>
+        </a>
+        <a
+          href="https://github.com/whopio/whop-saas-starter"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--foreground)] hover:border-[var(--muted)]/40 sm:w-auto"
+        >
+          View Source
+        </a>
+      </div>
+    </div>
   </div>
 </section>

@@ -1,51 +1,163 @@
 ---
-import { PLAN_METADATA } from "@/lib/constants";
-import type { PlanMetadataEntry } from "@/lib/constants";
+import { getPlansConfig } from "@/lib/config";
+import { DEFAULT_PLAN } from "@/lib/constants";
+import type { PlanKey } from "@/lib/constants";
 
-const plans = Object.entries(PLAN_METADATA) as [string, PlanMetadataEntry][];
+const plans = getPlansConfig();
+const planKeys = Object.keys(plans) as PlanKey[];
 ---
 
-<section class="py-24 px-6 border-t border-[var(--border)]">
-  <div class="max-w-5xl mx-auto">
-    <h2 class="text-3xl font-bold text-center mb-4">Simple pricing</h2>
-    <p class="text-center text-[var(--muted)] mb-12">Choose the plan that works for you</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-      {plans.map(([key, plan]) => (
-        <div class:list={[
-          "rounded-xl border p-6 flex flex-col",
-          plan.highlighted
-            ? "border-[var(--accent)] bg-[var(--card)] shadow-lg scale-105"
-            : "border-[var(--border)] bg-[var(--card)]",
-        ]}>
-          <h3 class="text-xl font-semibold mb-2">{plan.name}</h3>
-          <p class="text-sm text-[var(--muted)] mb-4">{plan.description}</p>
-          <div class="mb-6">
-            <span class="text-3xl font-bold">
-              {plan.priceMonthly === 0 ? "Free" : `$${plan.priceMonthly}`}
-            </span>
-            {plan.priceMonthly > 0 && <span class="text-[var(--muted)]">/mo</span>}
+<div>
+  <!-- Billing toggle -->
+  <div class="flex items-center justify-center gap-3 mb-10">
+    <span id="label-monthly" class="text-sm font-medium transition-colors text-[var(--muted)]">Monthly</span>
+    <button
+      type="button"
+      role="switch"
+      aria-checked="true"
+      aria-label="Toggle yearly billing"
+      id="billing-toggle"
+      class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-[var(--border)] bg-[var(--surface)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+    >
+      <span id="toggle-knob" class="pointer-events-none inline-block h-5 w-5 rounded-full bg-[var(--foreground)] transition-transform translate-x-5"></span>
+    </button>
+    <span id="label-yearly" class="text-sm font-medium transition-colors text-[var(--foreground)]">Yearly</span>
+    <span id="save-badge" class="rounded-full bg-emerald-100 dark:bg-emerald-900/40 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
+      Save ~17%
+    </span>
+  </div>
+
+  <!-- Plan cards -->
+  <div class="mx-auto grid max-w-5xl gap-4 lg:grid-cols-3">
+    {planKeys.map((key) => {
+      const plan = plans[key];
+      const isFree = key === DEFAULT_PLAN;
+      const highlighted = plan.highlighted;
+      const orderClass = highlighted ? "order-first lg:order-none" : isFree ? "order-last lg:order-none" : "";
+
+      return (
+        <div
+          class:list={[
+            "relative flex flex-col rounded-xl border p-6",
+            orderClass,
+            highlighted ? "border-[var(--accent)] bg-[var(--card)]" : "border-[var(--border)] bg-[var(--card)]",
+          ]}
+          style={highlighted ? "box-shadow: 0 2px 40px -12px color-mix(in srgb, var(--accent) 25%, transparent)" : undefined}
+        >
+          {highlighted && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span class="rounded-full bg-[var(--accent)] px-3 py-1 text-[11px] font-semibold text-[var(--accent-foreground)] whitespace-nowrap">
+                Most Popular
+              </span>
+            </div>
+          )}
+
+          <h3 class="text-sm font-semibold">{plan.name}</h3>
+          <p class="mt-1 text-xs text-[var(--muted)]">{plan.description}</p>
+
+          <div class="mt-4">
+            {isFree ? (
+              <span class="text-3xl font-semibold tracking-tight">Free</span>
+            ) : plan.priceMonthly > 0 ? (
+              <Fragment>
+                <span class="text-3xl font-semibold tracking-tight" style="font-variant-numeric: tabular-nums" data-monthly={plan.priceMonthly} data-yearly={plan.priceYearly}>
+                  ${plan.priceYearly > 0 ? Math.round(plan.priceYearly / 12) : plan.priceMonthly}
+                </span>
+                <span class="text-xs text-[var(--muted)] ml-0.5">/mo</span>
+              </Fragment>
+            ) : (
+              <span class="text-3xl font-semibold tracking-tight">&mdash;</span>
+            )}
+            <p class="mt-0.5 h-4 text-[11px] text-[var(--muted)]" data-yearly-total={plan.priceYearly}>
+              {plan.priceYearly > 0 ? `$${plan.priceYearly} billed annually` : "\u00A0"}
+            </p>
           </div>
-          <ul class="space-y-2 mb-6 flex-1">
-            {plan.features.map((f) => (
-              <li class="text-sm flex items-start gap-2">
-                <span class="text-green-500 mt-0.5">✓</span>
-                <span>{f}</span>
+
+          <div class="mt-5">
+            {plan.whopPlanId ? (
+              <a
+                href="/api/auth/login"
+                class:list={[
+                  "block rounded-lg py-2.5 text-center text-sm font-medium transition-opacity",
+                  highlighted
+                    ? "bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-90"
+                    : isFree
+                      ? "border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface)]"
+                      : "bg-[var(--foreground)] text-[var(--background)] hover:opacity-90",
+                ]}
+              >
+                {isFree ? "Start Free" : highlighted ? "Get Started" : "Subscribe"}
+              </a>
+            ) : (
+              <span class="block w-full rounded-lg border border-[var(--border)] py-2.5 text-center text-xs text-[var(--muted)]">
+                Configure plan ID
+              </span>
+            )}
+          </div>
+
+          <ul class="mt-5 flex flex-col gap-2 flex-1">
+            {plan.features.map((feature) => (
+              <li class="flex items-start gap-2 text-xs text-[var(--muted)]">
+                <svg
+                  class:list={["h-3.5 w-3.5 shrink-0 mt-0.5", highlighted ? "text-[var(--accent)]" : "text-[var(--foreground)]"]}
+                  fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>{feature}</span>
               </li>
             ))}
           </ul>
-          <a
-            href={key === "free" ? "/api/auth/login" : "/api/auth/login"}
-            class:list={[
-              "block text-center py-2.5 rounded-lg font-medium transition-opacity hover:opacity-90",
-              plan.highlighted
-                ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                : "bg-[var(--foreground)] text-[var(--background)]",
-            ]}
-          >
-            {key === "free" ? "Get Started" : "Subscribe"}
-          </a>
         </div>
-      ))}
-    </div>
+      );
+    })}
   </div>
-</section>
+</div>
+
+<script>
+  const toggle = document.getElementById("billing-toggle");
+  const knob = document.getElementById("toggle-knob");
+  const labelMonthly = document.getElementById("label-monthly");
+  const labelYearly = document.getElementById("label-yearly");
+  const saveBadge = document.getElementById("save-badge");
+  let isYearly = true;
+
+  toggle?.addEventListener("click", () => {
+    isYearly = !isYearly;
+    toggle.setAttribute("aria-checked", String(isYearly));
+
+    // Toggle knob position
+    knob?.classList.toggle("translate-x-5", isYearly);
+    knob?.classList.toggle("translate-x-0", !isYearly);
+
+    // Label colors
+    labelMonthly?.classList.toggle("text-[var(--foreground)]", !isYearly);
+    labelMonthly?.classList.toggle("text-[var(--muted)]", isYearly);
+    labelYearly?.classList.toggle("text-[var(--foreground)]", isYearly);
+    labelYearly?.classList.toggle("text-[var(--muted)]", !isYearly);
+
+    // Save badge
+    if (saveBadge) saveBadge.style.display = isYearly ? "" : "none";
+
+    // Update prices
+    document.querySelectorAll<HTMLElement>("[data-monthly]").forEach((el) => {
+      const monthly = Number(el.dataset.monthly);
+      const yearly = Number(el.dataset.yearly);
+      if (isYearly && yearly > 0) {
+        el.textContent = `$${Math.round(yearly / 12)}`;
+      } else {
+        el.textContent = `$${monthly}`;
+      }
+    });
+
+    // Update subtitles
+    document.querySelectorAll<HTMLElement>("[data-yearly-total]").forEach((el) => {
+      const yearly = Number(el.dataset.yearlyTotal);
+      if (isYearly && yearly > 0) {
+        el.textContent = `$${yearly} billed annually`;
+      } else {
+        el.textContent = "\u00A0";
+      }
+    });
+  });
+</script>

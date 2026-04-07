@@ -1,0 +1,12 @@
+---
+import { APP_NAME } from "@/lib/constants";
+const { class: className } = Astro.props;
+---
+
+<span class:list={["inline-flex items-center gap-2", className]}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" aria-hidden="true">
+    <rect width="24" height="24" rx="6" fill="var(--accent, #5b4cff)" />
+    <path d="M13.5 4.5L8 13.5H12L10.5 19.5L16 10.5H12L13.5 4.5Z" fill="var(--accent-foreground, #fff)" />
+  </svg>
+  <span class="text-sm font-semibold tracking-tight">{APP_NAME}</span>
+</span>

@@ -1,13 +1,17 @@
----
-import { APP_NAME } from "@/lib/constants";
----
+<footer class="border-t border-[var(--border)]">
+  <div class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6">
+    <p class="text-xs text-[var(--muted)]">
+      Built with
+      <a href="https://astro.build" class="text-[var(--foreground)] hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer">Astro</a>
+      and
+      <a href="https://whop.com" class="text-[var(--foreground)] hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer">Whop</a>
+    </p>
 
-<footer class="py-8 px-6 border-t border-[var(--border)]">
-  <div class="max-w-5xl mx-auto flex items-center justify-between text-sm text-[var(--muted)]">
-    <span>&copy; {new Date().getFullYear()} {APP_NAME}</span>
-    <nav class="flex gap-4">
-      <a href="/terms" class="hover:text-[var(--foreground)] transition-colors">Terms</a>
-      <a href="/privacy" class="hover:text-[var(--foreground)] transition-colors">Privacy</a>
+    <nav class="flex gap-5">
+      <a href="/pricing" class="text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">Pricing</a>
+      <a href="/terms" class="text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">Terms</a>
+      <a href="/privacy" class="text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">Privacy</a>
+      <a href="https://github.com/whopio/whop-saas-starter" class="text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
   </div>
 </footer>

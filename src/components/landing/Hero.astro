@@ -1,22 +1,60 @@
----
-import { APP_NAME, APP_DESCRIPTION } from "@/lib/constants";
----
+<section class="relative overflow-hidden">
+  <!-- Gradient glow -->
+  <div class="pointer-events-none absolute inset-0 -z-10">
+    <div class="absolute left-1/2 top-0 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-[var(--accent)]/[0.04] blur-[120px]"></div>
+  </div>
 
-<section class="py-24 px-6">
-  <div class="max-w-3xl mx-auto text-center">
-    <h1 class="text-5xl font-bold tracking-tight mb-4 animate-[slide-up_0.5s_ease-out]">
-      {APP_NAME}
+  <div class="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20 lg:py-24">
+    <div class="animate-fade-in inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)] mb-8">
+      <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+      Built with Astro + Whop
+    </div>
+
+    <h1 class="animate-slide-up text-3xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl leading-[1.1]">
+      Build your SaaS <span class="text-[var(--muted)]">in minutes, not months</span>
     </h1>
-    <p class="text-xl text-[var(--muted)] mb-8 animate-[slide-up_0.5s_ease-out_0.1s] opacity-0 [animation-fill-mode:forwards]">
-      {APP_DESCRIPTION}
+
+    <p class="animate-slide-up delay-100 mx-auto mt-5 max-w-lg text-base text-[var(--muted)] leading-relaxed">
+      Authentication, payments, and subscriptions — all wired up. Just add your product.
     </p>
-    <div class="flex items-center justify-center gap-4 animate-[slide-up_0.5s_ease-out_0.2s] opacity-0 [animation-fill-mode:forwards]">
-      <a href="/api/auth/login" class="bg-[var(--accent)] text-[var(--accent-foreground)] px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
-        Get Started
+
+    <div class="animate-slide-up delay-200 mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a
+        href="/pricing"
+        class="group w-full rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)] transition-opacity hover:opacity-80 sm:w-auto"
+      >
+        Start Building
+        <span class="ml-1.5 inline-block transition-transform group-hover:translate-x-0.5">&rarr;</span>
       </a>
-      <a href="/pricing" class="border border-[var(--border)] px-6 py-3 rounded-lg font-medium hover:bg-[var(--surface)] transition-colors">
-        View Pricing
+      <a
+        href="https://github.com/whopio/whop-saas-starter"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-full rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--foreground)] hover:border-[var(--muted)]/40 sm:w-auto"
+      >
+        View Source
       </a>
+    </div>
+  </div>
+
+  <!-- Product screenshot placeholder -->
+  <div class="animate-scale-in delay-400 mx-auto max-w-5xl px-4 pb-16 sm:px-6 sm:pb-20 lg:pb-24">
+    <div class="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-xl shadow-black/[0.03] dark:shadow-none">
+      <div class="border-b border-[var(--border)] px-4 py-2.5 flex items-center gap-1.5">
+        <div class="h-2 w-2 rounded-full bg-[var(--border)]"></div>
+        <div class="h-2 w-2 rounded-full bg-[var(--border)]"></div>
+        <div class="h-2 w-2 rounded-full bg-[var(--border)]"></div>
+      </div>
+      <div class="flex h-48 items-center justify-center sm:h-72">
+        <div class="text-center px-6">
+          <div class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--surface)]">
+            <svg class="h-5 w-5 text-[var(--muted)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+            </svg>
+          </div>
+          <p class="text-xs text-[var(--muted)]">Replace with a screenshot of your product</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
