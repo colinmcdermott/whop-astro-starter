@@ -10,25 +10,25 @@ export const GET: APIRoute = async ({ url, cookies }) => {
   const state = url.searchParams.get("state");
 
   if (!code || !state) {
-    return Response.redirect(new URL("/login?error=missing_params", url.origin), 302);
+    return new Response(null, { status: 302, headers: { Location: new URL("/login?error=missing_params", url.origin).href } });
   }
 
   // Retrieve PKCE state
   const pkceCookie = cookies.get("pkce")?.value;
   if (!pkceCookie) {
-    return Response.redirect(new URL("/login?error=missing_pkce", url.origin), 302);
+    return new Response(null, { status: 302, headers: { Location: new URL("/login?error=missing_pkce", url.origin).href } });
   }
 
   const pkce = JSON.parse(pkceCookie);
   if (pkce.state !== state) {
-    return Response.redirect(new URL("/login?error=state_mismatch", url.origin), 302);
+    return new Response(null, { status: 302, headers: { Location: new URL("/login?error=state_mismatch", url.origin).href } });
   }
 
   cookies.delete("pkce", { path: "/" });
 
   const clientId = process.env.WHOP_APP_ID;
   if (!clientId) {
-    return Response.redirect(new URL("/login?error=not_configured", url.origin), 302);
+    return new Response(null, { status: 302, headers: { Location: new URL("/login?error=not_configured", url.origin).href } });
   }
 
   try {
@@ -68,9 +68,9 @@ export const GET: APIRoute = async ({ url, cookies }) => {
       cookies,
     );
 
-    return Response.redirect(new URL("/dashboard", url.origin), 302);
+    return new Response(null, { status: 302, headers: { Location: new URL("/dashboard", url.origin).href } });
   } catch (err) {
     console.error("[Auth] Callback error:", err);
-    return Response.redirect(new URL("/login?error=auth_failed", url.origin), 302);
+    return new Response(null, { status: 302, headers: { Location: new URL("/login?error=auth_failed", url.origin).href } });
   }
 };

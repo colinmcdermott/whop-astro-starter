@@ -21,5 +21,5 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     path: "/",
   });
 
-  return Response.redirect(authUrl, 302);
+  return new Response(null, { status: 302, headers: { Location: authUrl } });
 };

@@ -5,5 +5,5 @@ export const prerender = false;
 
 export const GET: APIRoute = async ({ cookies, url }) => {
   await clearSessionCookie(cookies);
-  return Response.redirect(new URL("/", url.origin), 302);
+  return new Response(null, { status: 302, headers: { Location: new URL("/", url.origin).href } });
 };
