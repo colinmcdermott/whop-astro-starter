@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import AppLogo from "@/components/AppLogo.astro";
+import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { getSession } from "@/lib/auth";
 import { getPlansConfig } from "@/lib/config";
 import { PLAN_KEYS, type PlanKey, type BillingInterval } from "@/lib/constants";
@@ -22,17 +23,20 @@ const whopPlanId = plan
   : "";
 
 const isValid = !!(plan && whopPlanId && planKey);
-const userEmail = session?.email ?? null;
+const price = plan ? (interval === "yearly" ? plan.priceYearly : plan.priceMonthly) : 0;
 ---
 
 <Layout title="Checkout">
   <div class="flex min-h-screen flex-col">
-    <header class="border-b border-[var(--border)] px-4 py-3">
+    <header class="flex items-center justify-between border-b border-[var(--border)] px-6 py-4">
       <a href="/"><AppLogo /></a>
+      <a href="/pricing" class="text-xs text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">
+        Back to Pricing
+      </a>
     </header>
 
-    <main class="flex-1 flex items-center justify-center px-4 py-12">
-      {!isValid ? (
+    {!isValid ? (
+      <div class="flex flex-1 items-center justify-center px-4">
         <div class="w-full max-w-xs text-center">
           <h1 class="text-sm font-semibold">Invalid Plan</h1>
           <p class="mt-2 text-xs text-[var(--muted)]">
@@ -45,54 +49,19 @@ const userEmail = session?.email ?? null;
             Back to Pricing
           </a>
         </div>
-      ) : (
-        <div class="w-full max-w-md">
-          <div class="text-center mb-8">
-            <h1 class="text-lg font-semibold">Subscribe to {plan.name}</h1>
-            <p class="mt-1 text-sm text-[var(--muted)]">
-              {plan.priceMonthly > 0 || plan.priceYearly > 0 ? (
-                interval === "yearly" && plan.priceYearly > 0
-                  ? `$${plan.priceYearly}/year`
-                  : `$${plan.priceMonthly}/month`
-              ) : (
-                "Complete your subscription"
-              )}
-            </p>
-          </div>
-
-          <!-- Whop Checkout Embed Container -->
-          <div
-            id="whop-checkout"
-            data-plan-id={whopPlanId}
-            data-email={userEmail ?? ""}
-            class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 min-h-[300px] flex items-center justify-center"
-          >
-            <div class="text-center">
-              <div class="animate-spin h-5 w-5 border-2 border-[var(--accent)] border-t-transparent rounded-full mx-auto mb-3"></div>
-              <p class="text-xs text-[var(--muted)]">Loading checkout...</p>
-            </div>
-          </div>
-
-          <p class="mt-4 text-center text-[10px] text-[var(--muted)]">
-            Payments are processed securely by <a href="https://whop.com" class="underline underline-offset-4 hover:text-[var(--foreground)]" target="_blank" rel="noopener noreferrer">Whop</a>.
-          </p>
-        </div>
-      )}
-    </main>
+      </div>
+    ) : (
+      <CheckoutForm
+        client:load
+        planName={plan.name}
+        planKey={planKey}
+        planFeatures={[...plan.features]}
+        whopPlanId={whopPlanId}
+        interval={interval}
+        price={price}
+        userEmail={session?.email ?? null}
+        userName={session?.name ?? null}
+      />
+    )}
   </div>
 </Layout>
-
-<script>
-  // Load Whop checkout embed
-  const container = document.getElementById("whop-checkout");
-  if (container) {
-    const planId = container.dataset.planId;
-    const email = container.dataset.email;
-    if (planId) {
-      // Redirect to Whop's hosted checkout
-      const params = new URLSearchParams({ plan: planId });
-      if (email) params.set("email", email);
-      window.location.href = `https://whop.com/checkout/${planId}`;
-    }
-  }
-</script>
