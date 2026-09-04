@@ -10,26 +10,26 @@
     "db:push": "prisma db push"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/react": "^5.0.3",
-    "@astrojs/vercel": "^8.1.4",
-    "@prisma/adapter-pg": "^7.6.0",
-    "@prisma/client": "^7.6.0",
-    "@tailwindcss/postcss": "^4.2.2",
-    "@whop/checkout": "^0.0.52",
-    "astro": "^5.8.4",
-    "jose": "^6.2.2",
-    "pg": "^8.20.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "tailwindcss": "^4.2.2",
-    "whop-kit": "^0.1.2"
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/react": "^5.0.7",
+    "@astrojs/vercel": "^8.2.11",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@whop/checkout": "^0.6.0",
+    "astro": "^5.18.2",
+    "jose": "^6.2.11",
+    "pg": "^8.23.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3",
+    "whop-kit": "^0.3.2"
   },
   "devDependencies": {
-    "@types/pg": "8.20.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "prisma": "^7.6.0",
+    "@types/pg": "8.23.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "prisma": "^7.10.0",
     "typescript": "^5.9.3"
   }
 }
